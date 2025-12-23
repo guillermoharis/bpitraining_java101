@@ -27,7 +27,7 @@ public class User {
 			if (loans[c].getBook() == book) {
 				for (int y = c; y < loanCount - 1; y++) {
 					loans[y] = loans[y + 1];
-				}		
+				}
 				loans[loanCount - 1] = null;
 				loanCount--;
 				break;

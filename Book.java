@@ -13,18 +13,18 @@ public class Book {
 		this.borrowed = false;
 	}
 
-	public int getID() { 
+	public int getID() {
 		return id;
 	}
-	
-	public String getTitle() { 
+
+	public String getTitle() {
 		return title;
 	}
-	
+
 	public String getAuthor() {
 		return author;
 	}
-	
+
 	public boolean isBorrowed() {
 		return borrowed;
 	}
