@@ -22,7 +22,7 @@ public class ATMTransaction {
             }
 
             System.out.println("Account Number: " + accountNumber);
-            System.out.println("Current Balance: P" + balance);
+            System.out.println("Current Balance: Php" + balance);
             System.out.println("Balance inquiry successful!");
 
         } catch (NumberFormatException e) {
