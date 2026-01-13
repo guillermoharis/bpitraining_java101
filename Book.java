@@ -1,4 +1,4 @@
-package ph.com.bpi.hello.group.project4v2;
+package GroupProject;
 
 public class Book {
 	private int id;
@@ -6,10 +6,6 @@ public class Book {
 	private String author;
 	private boolean borrowed;
 
-	public Book() {
-		
-	}
-	
 	public Book(int id, String title, String author) {
 		this.id = id;
 		this.title = title;
@@ -17,20 +13,28 @@ public class Book {
 		this.borrowed = false;
 	}
 
-	public int getID() { 
+	public int getID() {
 		return id;
 	}
-	
-	public String getTitle() { 
+
+	public String getTitle() {
 		return title;
 	}
-	
+
 	public String getAuthor() {
 		return author;
 	}
-	
+
 	public boolean isBorrowed() {
 		return borrowed;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	public void setBorrowed(boolean borrowed) {

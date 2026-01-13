@@ -1,157 +1,150 @@
-package ph.com.bpi.hello.group.project4v2;
+package GroupProject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Library {
-	private List<Book> books2 = new ArrayList<>();
-	// private Book[] books = new Book[5];
-	// private int bookCount = 0;
-
-	// private Loan[] loans = new Loan[5];
+	private List<Book> books = new ArrayList<>();
 	private List<Loan> loans = new ArrayList<>();
-	// private int loanCount = 0;
-
-	/*
-	 * public void addBook(Book book) { if (bookCount < 5) { books[bookCount] =
-	 * book; bookCount++; } }
-	 */
 
 	public List<Book> getBooks() {
-		return books2;
+		return books;
 	}
 
-	public void setBooks(List<Book> books2) {
-		this.books2 = books2;
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 
-	public void addBook(Book book) {
-
-		books2.add(book);
-
-	}
-
-	public boolean borrowBook(int index, User user) {
-		// if (index < 0 || index >= bookCount) {
-		// return false;
-		// }
-
-		// Book book = books2.contains(user.getId());
-
-		Book book = null;
-		for (Book b : books2) {
-			if (b.getID() == index) {
-				book = b;
-				break;
+	public boolean addBook(int bookID, String title, String author) {
+		for (Book b : books) {
+			if (b.getID() == bookID) {
+				System.out.println("\nBook ID already used!");
+				return false;
 			}
 		}
 
-		if (book.isBorrowed()) {
-			return false;
-		}
-
-		if (!user.canBorrow()) {
-			return false;
-		}
-
-		Loan loan = new Loan(book, user);
-		loans.add(loan);
-		// loanCount++;
-
-		book.setBorrowed(true);
-		user.addLoan(loan);
+		Book book = new Book(bookID, title, author);
+		books.add(book);
 
 		return true;
 	}
 
-	public boolean returnBook(int index, User user) {
-		// if (index < 0 || index >= bookCount) {
-		// return false;
-		// }
-
-		// Book book = books[index];
-		 
-
-		Book book = books2.get(index);
+	public boolean removeBook(int bookID) {
+		for (Loan l : loans) {
+			if (l.getBook().getID() == bookID) {
+				loans.remove(l);
+				break;
+			}
+		}
 		
-		if (!book.isBorrowed()) {
-			return false;
+		for (Book b : books) {
+			if (b.getID() == bookID) {	
+				books.remove(b);
+				return true;
+			}
 		}
 
-		// remove from library loans
-		/*
-		for (int c = 0; c < loanCount; c++) {
-			if (loans[c].getBook() == book) {
-				for (int y = c; y < loanCount - 1; y++) {
-					loans[y] = loans[y + 1];
+		System.out.println("\nInvalid Book ID!");
+		return false;
+	}
+
+	public boolean updateBook(int bookID, String title, String author) {
+		for (Loan l : loans) {
+			if (l.getBook().getID() == bookID) {
+				System.out.println("\nBook is currently borrowed!");
+				return false;
+			}
+		}
+		
+		for (Book b : books) {
+			if (b.getID() == bookID) {
+				if (title.trim().length() > 0) {
+					b.setTitle(title);
 				}
 
-				loans[loanCount - 1] = null;
-				loanCount--;
-				break;
-			}
-		}
-		*/
-		 
-		loans.removeIf(loan -> loan.getBook() == book);
+				if (author.trim().length() > 0) {
+					b.setAuthor(author);
+				}
 
-
-		for (Loan loan : loans) {
-			if (loan.getBook() == book) {
-				break;
+				return true;
 			}
 		}
 
-		user.removeLoan(book);
+		System.out.println("\nInvalid Book ID!");
+		return false;
+	}
 
-		book.setBorrowed(false);
+	public boolean borrowBook(int bookID, User user, int loanID) {
+		int bookIndex = -1;
+
+		for (Book b : books) {
+			if (b.getID() == bookID) {
+				bookIndex = books.indexOf(b);
+				if (b.isBorrowed()) {
+					System.out.println("\nBook already borrowed!");
+					return false;
+				}
+			}
+		}
+
+		if (bookIndex < 0) {
+			System.out.println("\nInvalid Book ID!");
+			return false;
+		}
+
+		Book book = books.get(bookIndex);
+
+		for (Loan l : loans) {
+			if (l.getID() == loanID) {
+				System.out.println("\nLoan ID already used!");
+				return false;
+			}
+		}
+
+		Loan loan = new Loan(book, user, loanID);
+		loans.add(loan);
+
+		book.setBorrowed(true);
+
 		return true;
 	}
 
-	public void displayAllBooks(List<Book> books2) {
-		System.out.println("\n========= ALL BOOKS =========");
-		System.out.println("ID - DETAILS");
-		/*
-		 * for (int c = 0; c < bookCount; c++) { System.out.println(" " +
-		 * books[c].getID() + " - " + books[c].getTitle() + " by " +
-		 * books[c].getAuthor()); }
-		 */
-		for (Book book : books2) {
-			System.out.println(" " + book.getID() + " - " + book.getTitle() + " by " + book.getAuthor());
+	public boolean returnBook(int loanID) {
+		for (Loan l : loans) {
+			if (l.getID() == loanID) {
+				loans.remove(l);
+
+				Book book = l.getBook();
+				book.setBorrowed(false);
+
+				return true;
+			}
+		}
+
+		System.out.println("\nInvalid Loan ID!");
+
+		return false;
+	}
+
+	public void displayAllBooks() {
+		for (Book book : books) {
+			System.out.println("Book ID: " + book.getID() + " - " + book.getTitle() + " by " + book.getAuthor());
 		}
 	}
 
 	public void displayAvailableBooks() {
-		System.out.println("\n====== AVAILABLE BOOKS ======");
-		System.out.println("ID - DETAILS");
-		/*
-		 * for (int c = 0; c < bookCount; c++) { if (!books[c].isBorrowed()) {
-		 * System.out .println(" " + books[c].getID() + " - " + books[c].getTitle() +
-		 * " by " + books[c].getAuthor()); } }
-		 */
-
-		for (Book book : books2) {
+		for (Book book : books) {
 			if (!book.isBorrowed()) {
-				System.out.println(" " + book.getID() + " - " + book.getTitle() + " by " + book.getAuthor());
+				System.out.println("Book ID: " + book.getID() + " - " + book.getTitle() + " by " + book.getAuthor());
 			}
 		}
 
 	}
 
 	public void displayBorrowedBooks() {
-		System.out.println("\n====== BORROWED BOOKS ======");
-		System.out.println("ID - DETAILS");
-		/*
-		for (int c = 0; c < loanCount; c++) {
-			Loan loan = loans[c];
-			System.out.println(" " + loan.getBook().getID() + " - " + loan.getBook().getTitle() + " (Borrowed by: "
-					+ loan.getUser().getName() + ")");
-		}
-		*/
-
 		for (Loan loan : loans) {
-			System.out.println(" " + loan.getBook().getID() + " - " + loan.getBook().getTitle() + " (Borrowed by: "
-					+ loan.getUser().getName() + ")");
+			System.out.println("Loan ID: " + loan.getID() + " - " + loan.getBook().getTitle() + " (Borrowed by: "
+					+ loan.getUser().getID() + " - " + loan.getUser().getName() + ")");
 		}
 
 	}
